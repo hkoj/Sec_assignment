@@ -1,0 +1,53 @@
+---
+title: "sec_ass"
+format: html
+editor: visual
+---
+
+```{r}
+#| setup
+#| echo: false
+#| output: false
+#| message: false
+library (vtable)
+library(tidyverse)
+```
+
+```{r}
+hoyde <- modelr::heights
+hoyde <- hoyde |>
+  mutate(
+    bmi = weight * 0.4536/(height * 2.54/100)^2,
+    married = fct_collapse(
+      .f = marital,
+      married = "married",
+      other_level = "not married"
+      ),
+    edu_fac = cut(
+      x = education,
+      breaks = c(0, 12, 14, 16, 21),
+      labels = c("not_hs", "not_cc", "not_col", "col_plus"),
+      right = FALSE
+      )
+    ) |>
+  select(income:age, education:bmi, everything()) |>
+  select(-education, -marital)
+hoydeZeroInc <- hoyde |>
+  filter(income == 0)
+hoydeNormInc <- hoyde |>
+  filter(income > 0 & income < 343830)
+hoydeHighInc <- hoyde |>
+  filter(income == 343830)
+```
+
+## Innledning
+
+## Litteraturgjennomgang
+
+## Sammenheng mellom inntekt og evnenivå
+
+## Sammenheng mellom ansiennitet og inntekt
+
+## Konklusjon
+
+## Referanser
