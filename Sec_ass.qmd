@@ -11,6 +11,9 @@ editor: visual
 #| message: false
 library (vtable)
 library(tidyverse)
+library(ggplot2)
+library(tinytex)
+library(ggpubr)
 ```
 
 ```{r}
@@ -45,6 +48,39 @@ hoydeHighInc <- hoyde |>
 ## Litteraturgjennomgang
 
 ## Sammenheng mellom inntekt og evnenivå
+
+```{r}
+# sammenligner kvinner og menn av de som ikke har inntekt
+hoydeZeroInc |>
+  ggplot() +
+  geom_histogram(
+    data = filter(hoydeZeroInc, sex == "male"),
+    mapping = aes(x = afqt, y = after_stat(density)),
+    alpha = 0.3
+  ) + 
+  geom_histogram(
+    data = filter(hoydeZeroInc, sex == "female"),
+    mapping = aes(x = afqt, y = after_stat(density)),
+    alpha = 0.5
+  )
+```
+
+```{r}
+#sammenligne evnenivå og inntekt i hoydeNormInc
+hoydeNormInc |>
+  ggplot(mapping = aes(x = afqt, y = income)) +
+  geom_point() +
+  geom_smooth()
+```
+
+```{r}
+# sammenligher evnenivå og inntekt på hele datasettet
+hoyde |>
+  select(afqt, income) |>
+  ggplot(mapping = aes(x = afqt, y = income)) +
+  geom_point() +
+  geom_smooth()
+```
 
 ## Sammenheng mellom ansiennitet og inntekt
 
