@@ -55,9 +55,15 @@ Det første settet er for de med ingen inntekt.
 Det andre settet er for normal inntekt der selve inntekten er mellom 0 og 343 830 amerikanske dollar.
 Det siste settet er for de med inntekt fra 343 830 amerikanske doller og oppover.
 
+Når vi sammeligner evnenivå og inntekt, bruker vi variabelen afqt.
+Dette er en måleenhet som det amerikanske militæret bruker til å måle evnenivå.
+@zotero-254
+
 ## Litteraturgjennomgang
 
 Tidligere forskning peker på at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007
+
+I sammenligningen mellom evnenivå og inntekt bruker vi variabelen afqt.
 
 ## Sammenheng mellom inntekt og evnenivå
 
