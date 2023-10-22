@@ -2,6 +2,8 @@
 title: "sec_ass"
 format: html
 editor: visual
+bibliography: Datasetthoyde-inntekt.bib
+nocite: '@*'
 ---
 
 ```{r}
@@ -45,7 +47,17 @@ hoydeHighInc <- hoyde |>
 
 ## Innledning
 
+I denne oppgaven skal vi se på to ulike sammenhenger.
+Sammenhengen mellom evnenivå og inntekt, og sammenhengen mellom ansiennitet og inntekt.
+
+Vi bruker datasettet heights og deler datasettet opp i tre ulike fordelt på inntektsnivået.
+Det første settet er for de med ingen inntekt.
+Det andre settet er for normal inntekt der selve inntekten er mellom 0 og 343 830 amerikanske dollar.
+Det siste settet er for de med inntekt fra 343 830 amerikanske doller og oppover.
+
 ## Litteraturgjennomgang
+
+Tidligere forskning peker på at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007
 
 ## Sammenheng mellom inntekt og evnenivå
 
@@ -56,6 +68,9 @@ hoydeNormInc |>
   geom_point() +
   geom_smooth()
 ```
+
+I overstående plott ser vi en sammenheng mellom evnenivå og inntekt i datasettet hoydeNormInc.
+Vi ser en stigning i den linjære linjen, noe som tilsier at økt envenivå gir høyere inntekt.
 
 ```{r}
 #afqt i hoydeZeroInc og hoydeHighInc
@@ -75,6 +90,11 @@ ggplot(
     fill = "red"
   )
 ```
+
+I dette histogrammet ser vi på sammenhengen mellom evnenivået i to ulike datasett.
+Datasettene som er brukt er hoydeZeroInc og hoydeHightInc.
+Her ser vi at det er en klar differane i evnenivået i de ulike datasettene.
+Datasettet med høy inntekt har helt klart hørere grad av envenivå sammenlignet med datasettet med ingen inntekt.
 
 ```{r}
 #sammenheng mellom afqt og inntekt, facet mht. kjønn
@@ -104,6 +124,8 @@ hoyde |>
   geom_point() +
   geom_smooth()
 ```
+
+I dette plottet har vi sammenlighet evnenivå og høyde.
 
 ```{r}
 # sammenligner afqt kvinner og menn på hele datasettet (ekstra) 
