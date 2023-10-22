@@ -132,6 +132,11 @@ hoyde |>
 ```
 
 I dette plottet har vi sammenlighet evnenivå og høyde.
+Vi kan se her at liten stigning i den linjære linjen.
+Dette kan muligens forklares ved hjelp av det neste histogrammet.
+I histogrammet sammenligner vi evnenivå på kvinner og menn.
+Her ser vi at det er flest menn på høyt evnenivå.
+Menn er også gjennomsnittlig høyere enn kvinner.
 
 ```{r}
 # sammenligner afqt kvinner og menn på hele datasettet (ekstra) 
