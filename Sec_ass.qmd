@@ -50,23 +50,7 @@ hoydeHighInc <- hoyde |>
 ## Sammenheng mellom inntekt og evnenivå
 
 ```{r}
-# sammenligner kvinner og menn av de som ikke har inntekt
-hoydeZeroInc |>
-  ggplot() +
-  geom_histogram(
-    data = filter(hoydeZeroInc, sex == "male"),
-    mapping = aes(x = afqt, y = after_stat(density)),
-    alpha = 0.3
-  ) + 
-  geom_histogram(
-    data = filter(hoydeZeroInc, sex == "female"),
-    mapping = aes(x = afqt, y = after_stat(density)),
-    alpha = 0.5
-  )
-```
-
-```{r}
-#sammenligne evnenivå og inntekt i hoydeNormInc
+#sammenheng mellom afqt og inntekt i hoydeNormInc
 hoydeNormInc |>
   ggplot(mapping = aes(x = afqt, y = income)) +
   geom_point() +
@@ -74,12 +58,71 @@ hoydeNormInc |>
 ```
 
 ```{r}
-# sammenligher evnenivå og inntekt på hele datasettet
+#afqt i hoydeZeroInc og hoydeHighInc
+ggplot(
+  data = hoydeZeroInc
+  )+
+  geom_histogram(
+    mapping = aes(x = afqt, y = after_stat(density)),
+    alpha = 0.3,
+    colour = "blue",
+    fill = "blue")+
+  geom_histogram(
+    data = hoydeHighInc,
+    mapping = aes(x = afqt, y = after_stat(density)),
+    alpha = 0.5,
+    colour = "red",
+    fill = "red"
+  )
+```
+
+```{r}
+#sammenheng mellom afqt og inntekt, facet mht. kjønn
+ggplot(hoyde) +
+  geom_point(
+    mapping = aes(x = afqt, y = income)) +
+  geom_smooth()
+```
+
+```{r}
+#sammenheng mellom edu_fac/education og afqt
+ggplot(
+  data = hoyde,
+  mapping = aes(
+    x = edu_fac,
+    y = afqt
+  )
+) +
+  geom_point()
+```
+
+```{r}
+#sammenheng mellom høyde og afqt
 hoyde |>
-  select(afqt, income) |>
-  ggplot(mapping = aes(x = afqt, y = income)) +
+  select(afqt, height) |>
+  ggplot(mapping = aes(x = afqt, y = height)) +
   geom_point() +
   geom_smooth()
+```
+
+```{r}
+# sammenligner afqt kvinner og menn på hele datasettet (ekstra) 
+hoyde |>
+  ggplot() +
+  geom_histogram(
+    data = filter(hoyde, sex == "male"),
+    mapping = aes(x = afqt, y = after_stat(density)),
+    alpha = 0.3,
+    colour = "blue",
+    fill = "blue"
+  ) + 
+  geom_histogram(
+    data = filter(hoyde, sex == "female"),
+    mapping = aes(x = afqt, y = after_stat(density)),
+    alpha = 0.5,
+    colour = "red",
+    fill = "red"
+  )
 ```
 
 ## Sammenheng mellom ansiennitet og inntekt
