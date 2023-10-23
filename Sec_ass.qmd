@@ -47,17 +47,11 @@ hoydeHighInc <- hoyde |>
 
 ## Innledning
 
-I denne oppgaven skal vi se på to ulike sammenhenger.
-Sammenhengen mellom evnenivå og inntekt, og sammenhengen mellom ansiennitet og inntekt.
+I denne oppgaven skal vi se på to ulike sammenhenger. Sammenhengen mellom evnenivå og inntekt, og sammenhengen mellom ansiennitet og inntekt.
 
-Vi bruker datasettet heights og deler datasettet opp i tre ulike fordelt på inntektsnivået.
-Det første settet er for de med ingen inntekt.
-Det andre settet er for normal inntekt der selve inntekten er mellom 0 og 343 830 amerikanske dollar.
-Det siste settet er for de med inntekt fra 343 830 amerikanske doller og oppover.
+Vi bruker datasettet heights og deler datasettet opp i tre ulike fordelt på inntektsnivået. Det første settet er for de med ingen inntekt. Det andre settet er for normal inntekt der selve inntekten er mellom 0 og 343 830 amerikanske dollar. Det siste settet er for de med inntekt fra 343 830 amerikanske doller og oppover.
 
-Når vi sammeligner evnenivå og inntekt, bruker vi variabelen afqt.
-Dette er en måleenhet som det amerikanske militæret bruker til å måle evnenivå.
-@zotero-254
+Når vi sammeligner evnenivå og inntekt, bruker vi variabelen afqt. Dette er en måleenhet som det amerikanske militæret bruker til å måle evnenivå. @zotero-254
 
 ## Litteraturgjennomgang
 
@@ -68,16 +62,15 @@ I sammenligningen mellom evnenivå og inntekt bruker vi variabelen afqt.
 ## Sammenheng mellom inntekt og evnenivå
 
 ```{r}
-<<<<<<< HEAD
 #sammenheng mellom afqt og inntekt i hoydeNormInc
 hoydeNormInc |>
   ggplot(mapping = aes(x = afqt, y = income)) +
   geom_point() +
   geom_smooth()
+
 ```
 
-I overstående plott ser vi en sammenheng mellom evnenivå og inntekt i datasettet hoydeNormInc.
-Vi ser en stigning i den linjære linjen, noe som tilsier at økt envenivå gir høyere inntekt.
+I overstående plott ser vi en sammenheng mellom evnenivå og inntekt i datasettet hoydeNormInc. Vi ser en stigning i den linjære linjen, noe som tilsier at økt envenivå gir høyere inntekt.
 
 ```{r}
 #afqt i hoydeZeroInc og hoydeHighInc
@@ -98,10 +91,7 @@ ggplot(
   )
 ```
 
-I dette histogrammet ser vi på sammenhengen mellom evnenivået i to ulike datasett.
-Datasettene som er brukt er hoydeZeroInc og hoydeHightInc.
-Her ser vi at det er en klar differane i evnenivået i de ulike datasettene.
-Datasettet med høy inntekt har helt klart hørere grad av envenivå sammenlignet med datasettet med ingen inntekt.
+I dette histogrammet ser vi på sammenhengen mellom evnenivået i to ulike datasett. Datasettene som er brukt er hoydeZeroInc og hoydeHighInc. Her ser vi at det er en klar differane i evnenivået i de ulike datasettene. Datasettet med høy inntekt har helt klart høyere grad av envenivå sammenlignet med datasettet med ingen inntekt.
 
 ```{r}
 #sammenheng mellom afqt og inntekt, facet mht. kjønn
@@ -132,12 +122,7 @@ hoyde |>
   geom_smooth()
 ```
 
-I dette plottet har vi sammenlighet evnenivå og høyde.
-Vi kan se her at liten stigning i den linjære linjen.
-Dette kan muligens forklares ved hjelp av det neste histogrammet.
-I histogrammet sammenligner vi evnenivå på kvinner og menn.
-Her ser vi at det er flest menn på høyt evnenivå.
-Menn er også gjennomsnittlig høyere enn kvinner.
+I dette plottet har vi sammenlighet evnenivå og høyde. Vi kan se her at liten stigning i den linjære linjen. Dette kan muligens forklares ved hjelp av det neste histogrammet. I histogrammet sammenligner vi evnenivå på kvinner og menn. Her ser vi at det er flest menn på høyt evnenivå. Menn er også gjennomsnittlig høyere enn kvinner.
 
 ```{r}
 # sammenligner afqt kvinner og menn på hele datasettet (ekstra) 
@@ -178,6 +163,147 @@ hoydeNormInc  |>
 ```
 
 ## Sammenheng mellom ansiennitet og inntekt
+
+```{r}
+hoydeNormInc  |> 
+  ggplot(
+  mapping = aes(
+    x = age,
+    y = income
+    )
+  ) + 
+  geom_jitter(
+    size = 1,
+    alpha = 0.40
+    ) +
+  geom_smooth(
+    formula = y ~ x,
+    method = "lm",
+    colour = "black",
+    lwd = 0.75,
+    se = FALSE
+    )
+```
+
+• Er det noen sammenheng?
+
+-   Nei
+
+```{r}
+# sammenligner alder på kvinner og menn på hele datasettet (ekstra) 
+hoyde |>
+  ggplot() +
+  geom_histogram(
+    data = filter(hoyde, sex == "male"),
+    mapping = aes(x = age, y = after_stat(density)),
+    alpha = 0.3,
+    colour = "blue",
+    fill = "blue"
+  ) + 
+  geom_histogram(
+    data = filter(hoyde, sex == "female"),
+    mapping = aes(x = age, y = after_stat(density)),
+    alpha = 0.5,
+    colour = "red",
+    fill = "red"
+  )
+hoyde |>
+  ggplot(
+  mapping = aes(
+    x = age,
+    y = income
+    )
+  ) +
+geom_jitter(
+    size = 1,
+    alpha = 0.40
+    ) + 
+  geom_smooth(
+    formula = y ~ x,
+    method = "lm",
+    colour = "black",
+    lwd = 0.75,
+    se = FALSE
+    )
+```
+
+```{r}
+# lønn har en tendense til å falle når  
+hoyde |>
+  ggplot() +
+  geom_histogram(
+    data = filter(hoydeNormInc, sex == "male"),
+    mapping = aes(x = age, y = after_stat(density)),
+    alpha = 0.3,
+    colour = "blue",
+    fill = "blue"
+  ) + 
+  geom_histogram(
+    data = filter(hoydeNormInc, sex == "female"),
+    mapping = aes(x = age, y = after_stat(density)),
+    alpha = 0.5,
+    colour = "red",
+    fill = "red"
+  )
+hoyde |>
+  ggplot(
+  mapping = aes(
+    x = age,
+    y = income
+    )
+  ) +
+  geom_smooth(
+    formula = y ~ x,
+    method = "lm",
+    colour = "black",
+    lwd = 0.75,
+    se = FALSE
+    )
+```
+
+• Er det forskjeller mht. kjønn?
+
+Nei
+
+• Er det markante kjønnsforskjeller mht. alder i hoydeZeroInc, hoydeHighInc og hoydeNormInc?
+
+```{r}
+# sammenligner alder på kvinner og menn på hele datasettet (ekstra) 
+hoyde |>
+  ggplot() +
+  geom_histogram(
+    data = filter(hoydeNormInc, sex == "male"),
+    mapping = aes(x = age, y = after_stat(density)),
+    alpha = 0.3,
+    colour = "blue",
+    fill = "blue"
+  ) + 
+  geom_histogram(
+    data = filter(hoydeNormInc, sex == "female"),
+    mapping = aes(x = age, y = after_stat(density)),
+    alpha = 0.5,
+    colour = "red",
+    fill = "red"
+  )
+hoydeNormInc  |> 
+  ggplot(
+  mapping = aes(
+    x = age,
+    y = income
+    )
+  ) + 
+  geom_jitter(
+    size = 1,
+    alpha = 0.40
+    ) +
+  geom_smooth(
+    formula = y ~ x,
+    method = "lm",
+    colour = "black",
+    lwd = 0.75,
+    se = FALSE
+    )
+```
 
 ## Konklusjon
 
