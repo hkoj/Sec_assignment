@@ -110,7 +110,8 @@ ggplot(
     y = afqt
   )
 ) +
-  geom_point()
+  geom_boxplot()  # Add a box plot
+
 ```
 
 ```{r}
@@ -142,24 +143,6 @@ hoyde |>
     colour = "red",
     fill = "red"
   )
-hoydeNormInc  |> 
-  ggplot(
-  mapping = aes(
-    x = afqt,
-    y = income
-    )
-  ) + 
-  geom_jitter(
-    size = 1,
-    alpha = 0.40
-    ) +
-  geom_smooth(
-    formula = y ~ x,
-    method = "lm",
-    colour = "black",
-    lwd = 0.75,
-    se = FALSE
-    )
 ```
 
 ## Sammenheng mellom ansiennitet og inntekt
@@ -172,7 +155,7 @@ hoydeNormInc  |>
     y = income
     )
   ) + 
-  geom_jitter(
+      geom_jitter(
     size = 1,
     alpha = 0.40
     ) +
