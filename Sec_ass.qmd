@@ -61,9 +61,10 @@ Dette er en måleenhet som det amerikanske militæret bruker til å måle evneni
 
 ## Litteraturgjennomgang
 
-Tidligere forskning peker på at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007
+Tidligere forskning viser at det er en sammenheng mellom inntekt og evnenivå.
+det er påvis at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007
 
-I sammenligningen mellom evnenivå og inntekt bruker vi variabelen afqt.
+.
 
 ## Sammenheng mellom inntekt og evnenivå
 
@@ -112,8 +113,11 @@ ggplot(data = hoyde,
        ) +
   geom_point(data = my_hoyde,
              mapping = aes(x = afqt, y = income)) +
+  geom_smooth(method = lm) +
   facet_wrap(~ sex)
 ```
+
+Her ser vi at det er sterkere vekst av inntekt hos mennene sammenlignet kvinner når det kommer til evnenivå.
 
 ```{r}
 #sammenheng mellom edu_fac/education og afqt
@@ -127,6 +131,11 @@ ggplot(
   geom_point()+
   geom_boxplot()
 ```
+
+Her ser vi en klar sammenheng mellom utdanningsnivå og evnenivå.
+Vi ser at for hvert utdanningsnivå så øker medianen til evnenivået.
+Det som befinner deg innenfor boksene, er de miderste 50 % av verdiene.
+Vi kan se her at det er større spredning på evnenivået på de med høyere utdannen sammenlignet med de som ikke har utdannelse
 
 ```{r}
 #sammenheng mellom høyde og afqt
@@ -167,5 +176,8 @@ hoyde |>
 ## Sammenheng mellom ansiennitet og inntekt
 
 ## Konklusjon
+
+Vi ser en klar sammenheng mellom evnenivå og inntekt.
+Som vi så i box-plottet kan dette skyldes at de med høyest utdannelse, og det en kan teke oss har høyere lønn, har høyere evnenivå sammenlignet med de som ikke har utdannelse.
 
 ## Referanser
