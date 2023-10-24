@@ -105,10 +105,14 @@ Datasettet med høy inntekt har helt klart hørere grad av envenivå sammenligne
 
 ```{r}
 #sammenheng mellom afqt og inntekt, facet mht. kjønn
-ggplot(hoyde) +
-  geom_point(
-    mapping = aes(x = afqt, y = income)) +
-  geom_smooth()
+my_hoyde <- data.frame(afqt = hoyde$afqt,income = hoyde$income, sex = hoyde$sex)
+
+ggplot(data = hoyde,
+       mapping = aes(x = afqt, y = income)
+       ) +
+  geom_point(data = my_hoyde,
+             mapping = aes(x = afqt, y = income)) +
+  facet_wrap(~ sex)
 ```
 
 ```{r}
@@ -121,10 +125,7 @@ ggplot(
   )
 ) +
   geom_point()+
-  geom_jitter(
-    size = 1,
-    alpha = 0.4
-  )
+  geom_boxplot()
 ```
 
 ```{r}
