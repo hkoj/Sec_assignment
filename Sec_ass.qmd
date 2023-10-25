@@ -63,7 +63,8 @@ Dette er en måleenhet som det amerikanske militæret bruker til å måle evneni
 ## Litteraturgjennomgang
 
 Tidligere forskning viser at det er en sammenheng mellom inntekt og evnenivå.
-det er påvis at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007. Tidligere forskning med søsken viser at forholdet mellom inntekt og evnenivå er sterkere mellom søstre sammenlignet med brødre @bound1986
+det er påvis at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007.
+Tidligere forskning med søsken viser at forholdet mellom inntekt og evnenivå er sterkere mellom søstre sammenlignet med brødre @bound1986
 
 .
 
