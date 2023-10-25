@@ -19,6 +19,7 @@ library(ggpubr)
 ```
 
 ```{r}
+#| echo: false
 hoyde <- modelr::heights
 hoyde <- hoyde |>
   mutate(
@@ -62,13 +63,14 @@ Dette er en måleenhet som det amerikanske militæret bruker til å måle evneni
 ## Litteraturgjennomgang
 
 Tidligere forskning viser at det er en sammenheng mellom inntekt og evnenivå.
-det er påvis at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007
+det er påvis at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007. Tidligere forskning med søsken viser at forholdet mellom inntekt og evnenivå er sterkere mellom søstre sammenlignet med brødre @bound1986
 
 .
 
 ## Sammenheng mellom inntekt og evnenivå
 
 ```{r}
+#| warning: false
 #sammenheng mellom afqt og inntekt i hoydeNormInc
 hoydeNormInc |>
   ggplot(mapping = aes(x = afqt, y = income)) +
@@ -80,6 +82,7 @@ I overstående plott ser vi en sammenheng mellom evnenivå og inntekt i datasett
 Vi ser en stigning i den linjære linjen, noe som tilsier at økt envenivå gir høyere inntekt.
 
 ```{r}
+#| warning: false
 #afqt i hoydeZeroInc og hoydeHighInc
 ggplot(
   data = hoydeZeroInc
@@ -105,6 +108,7 @@ Her ser vi at det er en klar differane i evnenivået i de ulike datasettene.
 Datasettet med høy inntekt har helt klart hørere grad av envenivå sammenlignet med datasettet med ingen inntekt.
 
 ```{r}
+#| warning: false
 #sammenheng mellom afqt og inntekt, facet mht. kjønn
 my_hoyde <- data.frame(afqt = hoyde$afqt,income = hoyde$income, sex = hoyde$sex)
 
@@ -120,6 +124,7 @@ ggplot(data = hoyde,
 Her ser vi at det er sterkere vekst av inntekt hos mennene sammenlignet kvinner når det kommer til evnenivå.
 
 ```{r}
+#| warning: false
 #sammenheng mellom edu_fac/education og afqt
 ggplot(
   data = hoyde,
@@ -138,6 +143,7 @@ Det som befinner deg innenfor boksene, er de miderste 50 % av verdiene.
 Vi kan se her at det er større spredning på evnenivået på de med høyere utdannen sammenlignet med de som ikke har utdannelse
 
 ```{r}
+#| warning: false
 #sammenheng mellom høyde og afqt
 hoyde |>
   select(afqt, height) |>
@@ -154,6 +160,7 @@ Her ser vi at det er flest menn på høyt evnenivå.
 Menn er også gjennomsnittlig høyere enn kvinner.
 
 ```{r}
+#| warning: false
 # sammenligner afqt kvinner og menn på hele datasettet (ekstra) 
 hoyde |>
   ggplot() +
@@ -178,6 +185,7 @@ hoyde |>
 ## Konklusjon
 
 Vi ser en klar sammenheng mellom evnenivå og inntekt.
-Som vi så i box-plottet kan dette skyldes at de med høyest utdannelse, og det en kan teke oss har høyere lønn, har høyere evnenivå sammenlignet med de som ikke har utdannelse.
+Som vi så i box-plottet kan dette skyldes at de med høyest utdannelse har høyere evnenivå sammenlignet med de som ikke har utdannelse.
+En logisk konklusjon er at de me høyere utdannelse får seg jobber som gir høyere lønn.
 
 ## Referanser
