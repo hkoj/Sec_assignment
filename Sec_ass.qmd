@@ -147,8 +147,10 @@ hoyde |>
 
 ## Sammenheng mellom ansiennitet og inntekt
 
+Vi lager en scatter-plot med regresjonslinje for å undersøke om det er sammenheng mellom ansennitet og inntekt.
+
 ```{r}
-hoydeNormInc  |> 
+hoyde |> 
   ggplot(
   mapping = aes(
     x = age,
@@ -156,129 +158,201 @@ hoydeNormInc  |>
     )
   ) + 
       geom_jitter(
-    size = 1,
+    size = 0.5,
     alpha = 0.40
     ) +
   geom_smooth(
     formula = y ~ x,
     method = "lm",
     colour = "black",
-    lwd = 0.75,
+    lwd = 1,
     se = FALSE
     )
 ```
 
-• Er det noen sammenheng?
+Det virker som at regresjonslinjen er lineær, det vil si at det ikke virker å være sammenheng mellom ansennitet og alder. Dette virker snodig, men vi må ha i bakhodet at datasettet vi arbeider med har aldersgruppene 48-56, noe som kan tilsi at de allerede er på toppen av sin ansennitet
 
--   Nei
+Vi undersøker deretter om det er sammenheng mellom ansennitet og alder på de forskjellige kjønn:
 
 ```{r}
-# sammenligner alder på kvinner og menn på hele datasettet (ekstra) 
-hoyde |>
+hoyde %>%
+  ggplot(aes(x = age, y = income, color = sex)) +
+  geom_point(
+    size = 2,
+    alpha = 0.5
+  ) +
+  geom_smooth(
+    aes(group = sex),
+    method = "loess",
+    se = FALSE
+  ) +
+  labs(
+    x = "Age",
+    y = "Income",
+    color = "Sex"
+    )
+```
+
+Regresjonslinjen viser igjen at mer ansennitet ikke nødvendigvis gir høyere lønn, selv fordelt på kjønn.
+
+Vi lager et histogram av dataene fordelt på undergrupper.
+
+Vi starter med å regne ut gjennomsnittlig ansennitet og standardavvik for hhv. menn og kvinner. Disse parametrene vil vi bruke for å tegne inn normalfordelingskurver i samme plot.
+
+```{r}
+meanAgeMale <- hoyde |> 
+  filter(sex == 'male') %>% 
+  select(age) |> 
+  pull() |> 
+  mean()
+
+meanAgeFemale <- hoyde |> 
+  filter(sex == 'female') %>% 
+  select(age) |> 
+  pull() |> 
+  mean()
+
+# standard deviation
+sdAgeMale <- hoyde |> 
+  filter(sex == 'male') |> 
+  select(age) |> 
+  pull() |> 
+  sd()
+
+sdAgeFemale <- hoyde |>
+  filter(sex == 'female') |>
+  select(age) |>
+  pull() |> 
+  sd()
+```
+
+```{r}
+hoyde %>%
   ggplot() +
+  ### male ###
   geom_histogram(
     data = filter(hoyde, sex == "male"),
     mapping = aes(x = age, y = after_stat(density)),
-    alpha = 0.3,
-    colour = "blue",
-    fill = "blue"
-  ) + 
+    binwidth = 1, alpha = 0.3, colour = 'blue', fill = 'blue'
+    ) + 
+  geom_vline(
+    xintercept = meanAgeMale,
+    colour = 'grey40', lwd = 0.75, linetype = 3
+    ) +
+  stat_function(
+    fun = dnorm,
+    args = list(mean = meanAgeMale, sd = sdAgeMale),
+    colour = 'grey40'
+    ) +
+  # female
   geom_histogram(
     data = filter(hoyde, sex == "female"),
     mapping = aes(x = age, y = after_stat(density)),
-    alpha = 0.5,
-    colour = "red",
-    fill = "red"
-  )
-hoyde |>
-  ggplot(
-  mapping = aes(
-    x = age,
-    y = income
-    )
-  ) +
-geom_jitter(
-    size = 1,
-    alpha = 0.40
-    ) + 
-  geom_smooth(
-    formula = y ~ x,
-    method = "lm",
-    colour = "black",
-    lwd = 0.75,
-    se = FALSE
-    )
-```
-
-```{r}
-# lønn har en tendense til å falle når  
-hoyde |>
-  ggplot() +
-  geom_histogram(
-    data = filter(hoydeNormInc, sex == "male"),
-    mapping = aes(x = age, y = after_stat(density)),
-    alpha = 0.3,
-    colour = "blue",
-    fill = "blue"
-  ) + 
-  geom_histogram(
-    data = filter(hoydeNormInc, sex == "female"),
-    mapping = aes(x = age, y = after_stat(density)),
-    alpha = 0.5,
-    colour = "red",
-    fill = "red"
-  )
-hoyde |>
-  ggplot(
-  mapping = aes(
-    x = age,
-    y = income
-    )
-  ) +
-  geom_smooth(
-    formula = y ~ x,
-    method = "lm",
-    colour = "black",
-    lwd = 0.75,
-    se = FALSE
-    )
-```
-
-• Er det forskjeller mht. kjønn?
-
-Nei
-
-• Er det markante kjønnsforskjeller mht. alder i hoydeZeroInc, hoydeHighInc og hoydeNormInc?
-
-```{r}
-# sammenligner alder på kvinner og menn på hele datasettet (ekstra) 
-hoyde |>
-  ggplot() +
-  geom_histogram(
-    data = filter(hoydeNormInc, sex == "male"),
-    mapping = aes(x = age, y = after_stat(density)),
-    alpha = 0.3,
-    colour = "blue",
-    fill = "blue"
-  ) + 
-  geom_histogram(
-    data = filter(hoydeNormInc, sex == "female"),
-    mapping = aes(x = age, y = after_stat(density)),
-    alpha = 0.5,
-    colour = "red",
-    fill = "red"
-  )
-hoydeNormInc  |> 
-  ggplot(
-  mapping = aes(
-    x = age,
-    y = income
-    )
-  ) + 
-  geom_jitter(
-    size = 1,
-    alpha = 0.40
+    binwidth = 1, alpha = 0.7, colour = 'pink', fill = 'pink'
     ) +
+  stat_function(
+    fun = dnorm, args = list(mean = meanAgeFemale, sd = sdAgeFemale),
+    colour = 'pink'
+    ) +
+  geom_vline(
+    xintercept = meanAgeFemale, colour = 'pink', lwd = 0.75, linetype = 3
+    )
+```
+
+Histogrammene viser at i dette datasettet er det mer kvinner enn menn i aldersgruppen 53-56 år. Da kvinner har lavere inntekt enn menn kan dette forklare resultatet i sammenhengen mellom ansennitet og alder. Jo lengre ansennitet en har, jo høyere er kvinneandelen, med medførende lavere inntekt, som kan forklare at lengre ansennitet ikke fører til høyere lønn. Det er ikke lønna som går ned, det er at menn med høyere inntekt forsvinner.
+
+Vi undersøker om det er markante kjønnsforskjeller mht. alder i hoydeZeroInc, hoydeHighInc og HoydeNormInc.
+
+```{r}
+hoyde |>
+  ggplot() +
+  geom_histogram(
+    data = filter(hoydeNormInc, sex == "male"),
+    mapping = aes(x = age, y = after_stat(density)),
+    alpha = 0.3,
+    colour = "blue",
+    fill = "blue"
+  ) + 
+  geom_histogram(
+    data = filter(hoydeNormInc, sex == "female"),
+    mapping = aes(x = age, y = after_stat(density)),
+    alpha = 0.5,
+    colour = "red",
+    fill = "red"
+  )
+hoydeNormInc |>
+  ggplot(
+  mapping = aes(
+    x = age,
+    y = income
+    )
+  ) +
+  geom_smooth(
+    formula = y ~ x,
+    method = "lm",
+    colour = "black",
+    lwd = 0.75,
+    se = FALSE
+    )
+```
+
+```{r}
+hoyde |>
+  ggplot() +
+  geom_histogram(
+    data = filter(hoydeZeroInc, sex == "male"),
+    mapping = aes(x = age, y = after_stat(density)),
+    alpha = 0.3,
+    colour = "blue",
+    fill = "blue"
+  ) + 
+  geom_histogram(
+    data = filter(hoydeZeroInc, sex == "female"),
+    mapping = aes(x = age, y = after_stat(density)),
+    alpha = 0.5,
+    colour = "red",
+    fill = "red"
+  )
+hoydeZeroInc |>
+  ggplot(
+  mapping = aes(
+    x = age,
+    y = income
+    )
+  ) +
+  geom_smooth(
+    formula = y ~ x,
+    method = "lm",
+    colour = "black",
+    lwd = 0.75,
+    se = FALSE
+    )
+```
+
+```{r}
+hoyde |>
+  ggplot() +
+  geom_histogram(
+    data = filter(hoydeHighInc, sex == "male"),
+    mapping = aes(x = age, y = after_stat(density)),
+    alpha = 0.3,
+    colour = "blue",
+    fill = "blue"
+  ) + 
+  geom_histogram(
+    data = filter(hoydeHighInc, sex == "female"),
+    mapping = aes(x = age, y = after_stat(density)),
+    alpha = 0.5,
+    colour = "red",
+    fill = "red"
+  )
+hoydeHighInc |>
+  ggplot(
+  mapping = aes(
+    x = age,
+    y = income
+    )
+  ) +
   geom_smooth(
     formula = y ~ x,
     method = "lm",
