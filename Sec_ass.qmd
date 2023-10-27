@@ -362,6 +362,8 @@ hoydeHighInc |>
     )
 ```
 
+Histogrammet viser at i gruppen høy inntekt har aldersgruppen hvor det
+
 ## Konklusjon
 
 ## Referanser
