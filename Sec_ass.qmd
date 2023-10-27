@@ -56,7 +56,13 @@ Når vi sammeligner evnenivå og inntekt, bruker vi variabelen afqt. Dette er en
 
 ## Litteraturgjennomgang
 
+<<<<<<< HEAD
 Tidligere forskning viser at det er en sammenheng mellom inntekt og evnenivå. det er påvis at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007. Tidligere forskning med søsken viser at forholdet mellom inntekt og evnenivå er sterkere mellom søstre sammenlignet med brødre @bound1986
+=======
+Tidligere forskning viser at det er en sammenheng mellom inntekt og evnenivå.
+det er påvis at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007.
+Tidligere forskning med søsken viser at forholdet mellom inntekt og evnenivå er sterkere mellom søstre sammenlignet med brødre @bound1986
+>>>>>>> 5115c6456a1a522822a5823f9593f760ba3a535a
 
 .
 
@@ -124,13 +130,28 @@ ggplot(
     y = afqt
   )
 ) +
+<<<<<<< HEAD
   geom_boxplot()  # Add a box plot
   geom_point() +
+=======
+
+  geom_boxplot()  # Add a box plot
+
+
+  geom_point()+
+>>>>>>> 5115c6456a1a522822a5823f9593f760ba3a535a
   geom_boxplot()
 
 ```
 
+<<<<<<< HEAD
 Her ser vi en klar sammenheng mellom utdanningsnivå og evnenivå. Vi ser at for hvert utdanningsnivå så øker medianen til evnenivået. Det som befinner deg innenfor boksene, er de miderste 50 % av verdiene. Vi kan se her at det er større spredning på evnenivået på de med høyere utdannen sammenlignet med de som ikke har utdannelse
+=======
+Her ser vi en klar sammenheng mellom utdanningsnivå og evnenivå.
+Vi ser at for hvert utdanningsnivå så øker medianen til evnenivået.
+Det som befinner deg innenfor boksene, er de miderste 50 % av verdiene.
+Vi kan se her at det er større spredning på evnenivået på de med høyere utdannen sammenlignet med de som ikke har utdannelse
+>>>>>>> 5115c6456a1a522822a5823f9593f760ba3a535a
 
 ```{r}
 #| warning: false
@@ -187,10 +208,139 @@ hoyde |>
     method = "lm",
     colour = "black",
     lwd = 1,
+<<<<<<< HEAD
+=======
     se = FALSE
     )
 ```
 
+Det virker som at regresjonslinjen er lineær, det vil si at det ikke virker å være sammenheng mellom ansennitet og alder. Dette virker snodig, men vi må ha i bakhodet at datasettet vi arbeider med har aldersgruppene 48-56, noe som kan tilsi at de allerede er på toppen av sin ansennitet
+
+Vi undersøker deretter om det er sammenheng mellom ansennitet og alder på de forskjellige kjønn:
+
+```{r}
+hoyde %>%
+  ggplot(aes(x = age, y = income, color = sex)) +
+  geom_point(
+    size = 2,
+    alpha = 0.5
+  ) +
+  geom_smooth(
+    aes(group = sex),
+    method = "loess",
+    se = FALSE
+  ) +
+  labs(
+    x = "Age",
+    y = "Income",
+    color = "Sex"
+    )
+```
+
+Regresjonslinjen viser igjen at mer ansennitet ikke nødvendigvis gir høyere lønn, selv fordelt på kjønn.
+
+Vi lager et histogram av dataene fordelt på undergrupper.
+
+Vi starter med å regne ut gjennomsnittlig ansennitet og standardavvik for hhv. menn og kvinner. Disse parametrene vil vi bruke for å tegne inn normalfordelingskurver i samme plot.
+
+```{r}
+meanAgeMale <- hoyde |> 
+  filter(sex == 'male') %>% 
+  select(age) |> 
+  pull() |> 
+  mean()
+
+meanAgeFemale <- hoyde |> 
+  filter(sex == 'female') %>% 
+  select(age) |> 
+  pull() |> 
+  mean()
+
+# standard deviation
+sdAgeMale <- hoyde |> 
+  filter(sex == 'male') |> 
+  select(age) |> 
+  pull() |> 
+  sd()
+
+sdAgeFemale <- hoyde |>
+  filter(sex == 'female') |>
+  select(age) |>
+  pull() |> 
+  sd()
+```
+
+```{r}
+hoyde %>%
+  ggplot() +
+  ### male ###
+  geom_histogram(
+    data = filter(hoyde, sex == "male"),
+    mapping = aes(x = age, y = after_stat(density)),
+    binwidth = 1, alpha = 0.3, colour = 'blue', fill = 'blue'
+    ) + 
+  geom_vline(
+    xintercept = meanAgeMale,
+    colour = 'grey40', lwd = 0.75, linetype = 3
+    ) +
+  stat_function(
+    fun = dnorm,
+    args = list(mean = meanAgeMale, sd = sdAgeMale),
+    colour = 'grey40'
+    ) +
+  # female
+  geom_histogram(
+    data = filter(hoyde, sex == "female"),
+    mapping = aes(x = age, y = after_stat(density)),
+    binwidth = 1, alpha = 0.7, colour = 'pink', fill = 'pink'
+    ) +
+  stat_function(
+    fun = dnorm, args = list(mean = meanAgeFemale, sd = sdAgeFemale),
+    colour = 'pink'
+    ) +
+  geom_vline(
+    xintercept = meanAgeFemale, colour = 'pink', lwd = 0.75, linetype = 3
+    )
+```
+
+Histogrammene viser at i dette datasettet er det mer kvinner enn menn i aldersgruppen 53-56 år. Da kvinner har lavere inntekt enn menn kan dette forklare resultatet i sammenhengen mellom ansennitet og alder. Jo lengre ansennitet en har, jo høyere er kvinneandelen, med medførende lavere inntekt, som kan forklare at lengre ansennitet ikke fører til høyere lønn. Det er ikke lønna som går ned, det er at menn med høyere inntekt forsvinner.
+
+Vi undersøker om det er markante kjønnsforskjeller mht. alder i hoydeZeroInc, hoydeHighInc og HoydeNormInc.
+
+```{r}
+hoyde |>
+  ggplot() +
+  geom_histogram(
+    data = filter(hoydeNormInc, sex == "male"),
+    mapping = aes(x = age, y = after_stat(density)),
+    alpha = 0.3,
+    colour = "blue",
+    fill = "blue"
+  ) + 
+  geom_histogram(
+    data = filter(hoydeNormInc, sex == "female"),
+    mapping = aes(x = age, y = after_stat(density)),
+    alpha = 0.5,
+    colour = "red",
+    fill = "red"
+  )
+hoydeNormInc |>
+  ggplot(
+  mapping = aes(
+    x = age,
+    y = income
+    )
+  ) +
+  geom_smooth(
+    formula = y ~ x,
+    method = "lm",
+    colour = "black",
+    lwd = 0.75,
+>>>>>>> 5115c6456a1a522822a5823f9593f760ba3a535a
+    se = FALSE
+    )
+
+<<<<<<< HEAD
 Det virker som at regresjonslinjen er lineær, det vil si at det ikke virker å være sammenheng mellom ansennitet og alder. Dette virker snodig, men vi må ha i bakhodet at datasettet vi arbeider med har aldersgruppene 48-56, noe som kan tilsi at de allerede er på toppen av sin ansennitet
 
 Vi undersøker deretter om det er sammenheng mellom ansennitet og alder på de forskjellige kjønn:
@@ -291,5 +441,13 @@ Histogrammet viser at i gruppen høy inntekt har aldersgruppen hvor det
 ## Konklusjon
 
 Vi ser en klar sammenheng mellom evnenivå og inntekt. Som vi så i box-plottet kan dette skyldes at de med høyest utdannelse har høyere evnenivå sammenlignet med de som ikke har utdannelse. En logisk konklusjon er at de me høyere utdannelse får seg jobber som gir høyere lønn.
+=======
+
+## Konklusjon
+
+Vi ser en klar sammenheng mellom evnenivå og inntekt.
+Som vi så i box-plottet kan dette skyldes at de med høyest utdannelse har høyere evnenivå sammenlignet med de som ikke har utdannelse.
+En logisk konklusjon er at de me høyere utdannelse får seg jobber som gir høyere lønn.
+>>>>>>> 5115c6456a1a522822a5823f9593f760ba3a535a
 
 ## Referanser
