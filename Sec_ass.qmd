@@ -7,7 +7,7 @@ nocite: '@*'
 ---
 
 ```{r}
-#| setup
+#| label: setup
 #| echo: false
 #| output: false
 #| message: false
@@ -19,6 +19,7 @@ library(ggpubr)
 ```
 
 ```{r}
+#| echo: false
 hoyde <- modelr::heights
 hoyde <- hoyde |>
   mutate(
@@ -55,13 +56,17 @@ Når vi sammeligner evnenivå og inntekt, bruker vi variabelen afqt. Dette er en
 
 ## Litteraturgjennomgang
 
-Tidligere forskning peker på at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007
+Tidligere forskning viser at det er en sammenheng mellom inntekt og evnenivå.
+det er påvis at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007.
+Tidligere forskning med søsken viser at forholdet mellom inntekt og evnenivå er sterkere mellom søstre sammenlignet med brødre @bound1986
 
-I sammenligningen mellom evnenivå og inntekt bruker vi variabelen afqt.
+.
 
 ## Sammenheng mellom inntekt og evnenivå
 
 ```{r}
+
+#| warning: false
 #sammenheng mellom afqt og inntekt i hoydeNormInc
 hoydeNormInc |>
   ggplot(mapping = aes(x = afqt, y = income)) +
@@ -73,6 +78,7 @@ hoydeNormInc |>
 I overstående plott ser vi en sammenheng mellom evnenivå og inntekt i datasettet hoydeNormInc. Vi ser en stigning i den linjære linjen, noe som tilsier at økt envenivå gir høyere inntekt.
 
 ```{r}
+#| warning: false
 #afqt i hoydeZeroInc og hoydeHighInc
 ggplot(
   data = hoydeZeroInc
@@ -81,7 +87,8 @@ ggplot(
     mapping = aes(x = afqt, y = after_stat(density)),
     alpha = 0.3,
     colour = "blue",
-    fill = "blue")+
+    fill = "blue"
+    )+
   geom_histogram(
     data = hoydeHighInc,
     mapping = aes(x = afqt, y = after_stat(density)),
@@ -94,14 +101,23 @@ ggplot(
 I dette histogrammet ser vi på sammenhengen mellom evnenivået i to ulike datasett. Datasettene som er brukt er hoydeZeroInc og hoydeHighInc. Her ser vi at det er en klar differane i evnenivået i de ulike datasettene. Datasettet med høy inntekt har helt klart høyere grad av envenivå sammenlignet med datasettet med ingen inntekt.
 
 ```{r}
+#| warning: false
 #sammenheng mellom afqt og inntekt, facet mht. kjønn
-ggplot(hoyde) +
-  geom_point(
-    mapping = aes(x = afqt, y = income)) +
-  geom_smooth()
+my_hoyde <- data.frame(afqt = hoyde$afqt,income = hoyde$income, sex = hoyde$sex)
+
+ggplot(data = hoyde,
+       mapping = aes(x = afqt, y = income)
+       ) +
+  geom_point(data = my_hoyde,
+             mapping = aes(x = afqt, y = income)) +
+  geom_smooth(method = lm) +
+  facet_wrap(~ sex)
 ```
 
+Her ser vi at det er sterkere vekst av inntekt hos mennene sammenlignet kvinner når det kommer til evnenivå.
+
 ```{r}
+#| warning: false
 #sammenheng mellom edu_fac/education og afqt
 ggplot(
   data = hoyde,
@@ -110,11 +126,22 @@ ggplot(
     y = afqt
   )
 ) +
+
   geom_boxplot()  # Add a box plot
+
+
+  geom_point()+
+  geom_boxplot()
 
 ```
 
+Her ser vi en klar sammenheng mellom utdanningsnivå og evnenivå.
+Vi ser at for hvert utdanningsnivå så øker medianen til evnenivået.
+Det som befinner deg innenfor boksene, er de miderste 50 % av verdiene.
+Vi kan se her at det er større spredning på evnenivået på de med høyere utdannen sammenlignet med de som ikke har utdannelse
+
 ```{r}
+#| warning: false
 #sammenheng mellom høyde og afqt
 hoyde |>
   select(afqt, height) |>
@@ -126,6 +153,7 @@ hoyde |>
 I dette plottet har vi sammenlighet evnenivå og høyde. Vi kan se her at liten stigning i den linjære linjen. Dette kan muligens forklares ved hjelp av det neste histogrammet. I histogrammet sammenligner vi evnenivå på kvinner og menn. Her ser vi at det er flest menn på høyt evnenivå. Menn er også gjennomsnittlig høyere enn kvinner.
 
 ```{r}
+#| warning: false
 # sammenligner afqt kvinner og menn på hele datasettet (ekstra) 
 hoyde |>
   ggplot() +
@@ -143,6 +171,7 @@ hoyde |>
     colour = "red",
     fill = "red"
   )
+
 ```
 
 ## Sammenheng mellom ansiennitet og inntekt
@@ -294,74 +323,12 @@ hoydeNormInc |>
     lwd = 0.75,
     se = FALSE
     )
-```
 
-```{r}
-hoyde |>
-  ggplot() +
-  geom_histogram(
-    data = filter(hoydeZeroInc, sex == "male"),
-    mapping = aes(x = age, y = after_stat(density)),
-    alpha = 0.3,
-    colour = "blue",
-    fill = "blue"
-  ) + 
-  geom_histogram(
-    data = filter(hoydeZeroInc, sex == "female"),
-    mapping = aes(x = age, y = after_stat(density)),
-    alpha = 0.5,
-    colour = "red",
-    fill = "red"
-  )
-hoydeZeroInc |>
-  ggplot(
-  mapping = aes(
-    x = age,
-    y = income
-    )
-  ) +
-  geom_smooth(
-    formula = y ~ x,
-    method = "lm",
-    colour = "black",
-    lwd = 0.75,
-    se = FALSE
-    )
-```
-
-```{r}
-hoyde |>
-  ggplot() +
-  geom_histogram(
-    data = filter(hoydeHighInc, sex == "male"),
-    mapping = aes(x = age, y = after_stat(density)),
-    alpha = 0.3,
-    colour = "blue",
-    fill = "blue"
-  ) + 
-  geom_histogram(
-    data = filter(hoydeHighInc, sex == "female"),
-    mapping = aes(x = age, y = after_stat(density)),
-    alpha = 0.5,
-    colour = "red",
-    fill = "red"
-  )
-hoydeHighInc |>
-  ggplot(
-  mapping = aes(
-    x = age,
-    y = income
-    )
-  ) +
-  geom_smooth(
-    formula = y ~ x,
-    method = "lm",
-    colour = "black",
-    lwd = 0.75,
-    se = FALSE
-    )
-```
 
 ## Konklusjon
+
+Vi ser en klar sammenheng mellom evnenivå og inntekt.
+Som vi så i box-plottet kan dette skyldes at de med høyest utdannelse har høyere evnenivå sammenlignet med de som ikke har utdannelse.
+En logisk konklusjon er at de me høyere utdannelse får seg jobber som gir høyere lønn.
 
 ## Referanser
