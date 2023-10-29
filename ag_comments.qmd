@@ -1,0 +1,28 @@
+---
+title: "ag comments"
+format: html
+editor: visual
+---
+
+-   Måtte fikse noen merge conflicts.
+
+    -   Tror at årsaken er at en av dere ikke har satt følgende globale opsjon:
+
+    -   R Markdown \> Visual \> Automatic text wrapping (line break): Sentence
+
+    -   Fører til at en av dere har automatisk linjeskift etter: .
+
+        -   Det beste for git
+
+    -   Den andre har ikke valgt dette.
+        Så da er hvert avsnitt en linje.
+
+-   Anbefaler bruk av hash-pipene label: fig-cap for å få caption og kryssreferanse for figurer.
+    Se foreslåtte endringer for første figur.
+
+-   I figur 2 har jeg skiftet til geom_density() istedenfor geom_histogram().
+    Gir litt klarere figur og er enklere å generere (Trenger ikke y = after_stat(density))
+
+-   Mot slutten blir plotene nokså kompliserte uten at jeg er sikker på at informasjonsinnholdet står helt i stil.
+
+-   Ikke glem at tabeller også kan gi viktig innsikt.
