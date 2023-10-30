@@ -1,6 +1,6 @@
 ---
 title: "sec_ass"
-format: html
+format: yaml
 editor: visual
 bibliography: Datasetthoyde-inntekt.bib
 nocite: '@*'
