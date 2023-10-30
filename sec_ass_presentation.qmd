@@ -1,6 +1,6 @@
 ---
 title: "sec_ass"
-format: html
+format: yaml
 editor: visual
 bibliography: Datasetthoyde-inntekt.bib
 nocite: '@*'
@@ -50,107 +50,113 @@ hoydeHighInc <- hoyde |>
 
 I denne oppgaven skal vi se på to ulike sammenhenger. Sammenhengen mellom evnenivå og inntekt, og sammenhengen mellom ansiennitet og inntekt.
 
-Vi bruker datasettet heights og deler datasettet opp i tre ulike fordelt på inntektsnivået. Det første settet er for de med ingen inntekt. Det andre settet er for normal inntekt der selve inntekten er mellom 0 og 343 830 amerikanske dollar. Det siste settet er for de med inntekt fra 343 830 amerikanske doller og oppover.
+Vi bruker datasettet heights og deler datasettet opp i tre ulike fordelt på inntektsnivået. Det første settet er for de med ingen inntekt. Det andre settet er for normal inntekt der selve inntekten er mellom 0 og 343 830 amerikanske dollar. Det siste settet er for de 2% høyeste inntektene. Gjennomsnittlig inntekt for disse øvre 2% er 343 830 amerikanske dollar.
 
 Når vi sammeligner evnenivå og inntekt, bruker vi variabelen afqt. Dette er en måleenhet som det amerikanske militæret bruker til å måle evnenivå. @zotero-254
 
 ## Litteraturgjennomgang
 
-Tidligere forskning viser at det er en sammenheng mellom inntekt og evnenivå. det er påvis at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007. Tidligere forskning med søsken viser at forholdet mellom inntekt og evnenivå er sterkere mellom søstre sammenlignet med brødre @bound1986
-
-Tidligere forskning viser at det er en sammenheng mellom inntekt og evnenivå.
-det er påvis at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007.
-Tidligere forskning med søsken viser at forholdet mellom inntekt og evnenivå er sterkere mellom søstre sammenlignet med brødre @bound1986
-
-
-.
+Tidligere forskning viser at det er en sammenheng mellom inntekt og evnenivå. Det er påvis at for hvert ekstra IQ poeng, kan inntekten øke fra \$234 til \$616 per år @zagorsky2007. Tidligere forskning med søsken viser at forholdet mellom inntekt og evnenivå er sterkere mellom søstre sammenlignet med brødre @bound1986.
 
 ## Sammenheng mellom inntekt og evnenivå
 
 ```{r}
-
+#| message: false
 #| warning: false
+#| label: fig-afqt-inc
+#| fig-cap: "Sammenhengen mellom afqt og inntekt."
 #sammenheng mellom afqt og inntekt i hoydeNormInc
 hoydeNormInc |>
+  # filtrerer bort obs.der vi ikke har afqt
+  filter(!is.na(afqt)) |> 
   ggplot(mapping = aes(x = afqt, y = income)) +
   geom_point() +
   geom_smooth()
 
 ```
 
-I overstående plott ser vi en sammenheng mellom evnenivå og inntekt i datasettet hoydeNormInc. Vi ser en stigning i den linjære linjen, noe som tilsier at økt envenivå gir høyere inntekt.
+I @fig-afqt-inc ser vi en sammenheng mellom evnenivå og inntekt i datasettet hoydeNormInc. Vi ser en stigning i den lineære linjen, noe som tilsier at økt evnenivå gir høyere inntekt.
 
 ```{r}
 #| warning: false
-#afqt i hoydeZeroInc og hoydeHighInc
-ggplot(
-  data = hoydeZeroInc
-  )+
-  geom_histogram(
-    mapping = aes(x = afqt, y = after_stat(density)),
+#| label: fig-afqt-incLevel
+#| fig-cap: "Tetthetsfunksjoner for evnenivå for de tre inntekstgruppene, ZeroInc (blå), NormInc (green) og HighInc (red)."
+# afqt i hoydeZeroInc og hoydeHighInc
+ggplot() +
+  geom_density(
+    data = hoydeZeroInc,
+    mapping = aes(x = afqt),
     alpha = 0.3,
     colour = "blue",
     fill = "blue"
-    )+
-  geom_histogram(
+    ) +
+  geom_density(
     data = hoydeHighInc,
-    mapping = aes(x = afqt, y = after_stat(density)),
-    alpha = 0.5,
+    mapping = aes(x = afqt),
+    alpha = 0.3,
     colour = "red",
     fill = "red"
+  ) +
+  geom_density(
+    data = hoydeNormInc,
+    mapping = aes(x = afqt),
+    alpha = 0.3,
+    colour = "green",
+    fill = "green"
   )
 ```
 
-I dette histogrammet ser vi på sammenhengen mellom evnenivået i to ulike datasett. Datasettene som er brukt er hoydeZeroInc og hoydeHighInc. Her ser vi at det er en klar differane i evnenivået i de ulike datasettene. Datasettet med høy inntekt har helt klart høyere grad av envenivå sammenlignet med datasettet med ingen inntekt.
+I @fig-afqt-incLevel ser vi på sammenhengen mellom evnenivået i to ulike datasett. Datasettene som er brukt er hoydeZeroInc og hoydeHighInc. Her ser vi at det er en klar differanse i evnenivået i de ulike datasettene. Datasettet med høy inntekt har helt klart høyere grad av envenivå sammenlignet med datasettet med ingen inntekt.
 
 ```{r}
 #| warning: false
+#| message: false
 #sammenheng mellom afqt og inntekt, facet mht. kjønn
-my_hoyde <- data.frame(afqt = hoyde$afqt,income = hoyde$income, sex = hoyde$sex)
+#my_hoyde <- data.frame(afqt = hoyde$afqt,income = hoyde$income, sex = hoyde$sex)
+#
+# Jeg vil anbefale å heller benytte hoydeNormInc
 
-ggplot(data = hoyde,
-       mapping = aes(x = afqt, y = income)
-       ) +
-  geom_point(data = my_hoyde,
-             mapping = aes(x = afqt, y = income)) +
-  geom_smooth(method = lm) +
+hoydeNormInc |> 
+  filter(!is.na(afqt)) |> 
+  ggplot(mapping = aes(x = afqt, y = income)) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
   facet_wrap(~ sex)
 ```
 
-Her ser vi at det er sterkere vekst av inntekt hos mennene sammenlignet kvinner når det kommer til evnenivå.
+Her ser vi at evnenivå gir et sterkere utslag på inntekt hos mennene enn hos kvinnene.
 
 ```{r}
 #| warning: false
+#| message: false
 #sammenheng mellom edu_fac/education og afqt
-ggplot(
-  data = hoyde,
-  mapping = aes(
-    x = edu_fac,
-    y = afqt
+hoyde |>
+  # Dropper NA obs.
+  filter(!is.na(edu_fac)) |> 
+  ggplot(
+    mapping = aes(
+    # Bytter om på variablene her
+    # høyere evnenivå afqt (IQ) => mer utdanning 
+    # ikke: mer utdanning => høyere evnenivå afqt (IQ) dessverre ;-)
+    x = afqt,
+    y = edu_fac
   )
 ) +
-geom_boxplot()  # Add a box plot
-  geom_point() 
-
+# Add a box plot  
+geom_boxplot()  
 ```
 
-
-Her ser vi en klar sammenheng mellom utdanningsnivå og evnenivå. Vi ser at for hvert utdanningsnivå så øker medianen til evnenivået. Det som befinner deg innenfor boksene, er de miderste 50 % av verdiene. Vi kan se her at det er større spredning på evnenivået på de med høyere utdannen sammenlignet med de som ikke har utdannelse
-
-Her ser vi en klar sammenheng mellom utdanningsnivå og evnenivå.
-Vi ser at for hvert utdanningsnivå så øker medianen til evnenivået.
-Det som befinner deg innenfor boksene, er de miderste 50 % av verdiene.
-Vi kan se her at det er større spredning på evnenivået på de med høyere utdannen sammenlignet med de som ikke har utdannelse
-
+Her ser vi en klar sammenheng mellom utdanningsnivå og evnenivå. Vi ser at for hvert utdanningsnivå så øker medianen til evnenivået. Det som befinner deg innenfor boksene, er de midterste 50 % av verdiene. Vi kan se her at det er større spredning på evnenivået på de med høyere utdanning sammenlignet med de som ikke har utdannelse.
 
 ```{r}
 #| warning: false
+#| message: false
 #sammenheng mellom høyde og afqt
 hoyde |>
   select(afqt, height) |>
   ggplot(mapping = aes(x = afqt, y = height)) +
   geom_point() +
-  geom_smooth()
+  geom_smooth(method = lm)
 ```
 
 I dette plottet har vi sammenlighet evnenivå og høyde. Vi kan se her at liten stigning i den linjære linjen. Dette kan muligens forklares ved hjelp av det neste histogrammet. I histogrammet sammenligner vi evnenivå på kvinner og menn. Her ser vi at det er flest menn på høyt evnenivå. Menn er også gjennomsnittlig høyere enn kvinner.
@@ -175,6 +181,16 @@ hoyde |>
     fill = "red"
   )
 
+```
+
+```{r}
+hoyde |>
+  filter(!is.na(afqt)) %>% 
+  ggplot() +
+  geom_density(
+    mapping = aes(x = afqt, fill = sex, colour = sex),
+    alpha = 0.3
+  )
 ```
 
 ## Sammenheng mellom ansiennitet og inntekt
@@ -202,12 +218,13 @@ hoyde |>
     )
 ```
 
-Det virker som at regresjonslinjen er lineær, det vil si at det ikke virker å være sammenheng mellom ansennitet og alder. Dette virker snodig, men vi må ha i bakhodet at datasettet vi arbeider med har aldersgruppene 48-56, noe som kan tilsi at de allerede er på toppen av sin ansennitet
+Det virker som at regresjonslinjen er horisontal, det vil si at det ikke virker å være sammenheng mellom ansennitet og alder. Dette virker snodig, men vi må ha i bakhodet at datasettet vi arbeider med har aldersgruppene 48-56, noe som kan tilsi at de allerede er på toppen av sin ansennitet
 
 Vi undersøker deretter om det er sammenheng mellom ansennitet og alder på de forskjellige kjønn:
 
 ```{r}
-hoyde %>%
+#| message: false
+hoydeNormInc %>%
   ggplot(aes(x = age, y = income, color = sex)) +
   geom_point(
     size = 2,
@@ -215,7 +232,7 @@ hoyde %>%
   ) +
   geom_smooth(
     aes(group = sex),
-    method = "loess",
+    method = "lm",
     se = FALSE
   ) +
   labs(
@@ -225,7 +242,7 @@ hoyde %>%
     )
 ```
 
-Regresjonslinjen viser igjen at mer ansennitet ikke nødvendigvis gir høyere lønn, selv fordelt på kjønn.
+Regresjonslinjene viser igjen at mer ansennitet ikke nødvendigvis gir høyere lønn, selv fordelt på kjønn.
 
 Vi lager et histogram av dataene fordelt på undergrupper.
 
@@ -292,6 +309,16 @@ hoyde %>%
 ```
 
 Histogrammene viser at i dette datasettet er det mer kvinner enn menn i aldersgruppen 53-56 år. Da kvinner har lavere inntekt enn menn kan dette forklare resultatet i sammenhengen mellom ansennitet og alder. Jo lengre ansennitet en har, jo høyere er kvinneandelen, med medførende lavere inntekt, som kan forklare at lengre ansennitet ikke fører til høyere lønn. Det er ikke lønna som går ned, det er at menn med høyere inntekt forsvinner.
+
+En litt enklere variant:
+
+```{r}
+hoydeNormInc |>
+  ggplot() +
+  geom_density(mapping = aes(x = age, fill = sex, colour = sex), 
+               alpha = 0.3
+               )
+```
 
 Vi undersøker om det er markante kjønnsforskjeller mht. alder i hoydeZeroInc, hoydeHighInc og HoydeNormInc.
 
@@ -360,6 +387,7 @@ hoydeZeroInc |>
     se = FALSE
     )
 ```
+
 ```{r}
 hoyde |>
   ggplot() +
@@ -393,13 +421,33 @@ hoydeHighInc |>
     )
 ```
 
+Histogrammet viser at i gruppen høy inntekt har aldersgrupper hvor det ikke forekommer kvinner, dette vil som tidligere nevnt gjøre at det ser ut som at jo høyere ansennitet ikke påvirker lønn.
 
+«Vi undersøker om det er markante kjønnsforskjeller mht. alder i hoydeZeroInc, hoydeHighInc og HoydeNormInc.» For å undersøke dette tror jeg tabeller er bedre
 
-Histogrammet viser at i gruppen høy inntekt har aldersgrupper hvor det ikke forekommer kvinner, dette vil  som tidligere nevnt gjøre at det ser ut som at jo høyere ansennitet ikke på¨virker lønn. 
+```{r}
+hoydeZeroInc |> 
+  mutate(alder = as_factor(age)) |> 
+  select(alder) |> 
+  st()
+```
+
+```{r}
+hoydeNormInc |> 
+  mutate(alder = as_factor(age)) |> 
+  select(alder) |> 
+  st()
+```
+
+```{r}
+hoydeHighInc |> 
+  mutate(alder = as_factor(age)) |> 
+  select(alder) |> 
+  st()
+```
 
 ## Konklusjon
 
 Vi ser en klar sammenheng mellom evnenivå og inntekt. Som vi så i box-plottet kan dette skyldes at de med høyest utdannelse har høyere evnenivå sammenlignet med de som ikke har utdannelse. En logisk konklusjon er at de me høyere utdannelse får seg jobber som gir høyere lønn.
-
 
 ## Referanser
